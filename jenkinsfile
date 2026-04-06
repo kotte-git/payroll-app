@@ -1,0 +1,31 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                // Jenkins pulls the latest code from your repo
+                checkout scm
+            }
+        }
+        stage('Build') {
+            steps {
+                // We use 'bat' because your path suggests you are on Windows
+                bat 'mvn clean compile'
+            }
+        }
+        stage('Run Payroll Logic') {
+            steps {
+                bat 'mvn exec:java -Dexec.mainClass="com.payroll.App"'
+            }
+        }
+    }
+    post {
+        success {
+            echo 'Payroll Application Built and Executed Successfully!'
+        }
+        failure {
+            echo 'Build Failed. Check the pom.xml or Java code.'
+        }
+    }
+}
