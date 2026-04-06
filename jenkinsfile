@@ -29,3 +29,10 @@ pipeline {
         }
     }
 }
+stage('Deploy to Kubernetes') {
+    steps {
+        // This updates the deployment with the new image built in the previous stage
+        bat 'kubectl apply -f deployment.yaml'
+        bat 'kubectl rollout restart deployment/payroll-deployment'
+    }
+}
